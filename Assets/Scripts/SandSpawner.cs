@@ -7,6 +7,7 @@ public class SandSpawner : MonoBehaviour
     public InformationManager informationManager;
     public RotateToSpin rotateToSpin;
 
+    public AudioSource rocksAudio;
     public int amount;
 
     public Transform particleParent;
@@ -74,10 +75,19 @@ public class SandSpawner : MonoBehaviour
             em.rateOverTime = Mathf.Lerp(em.rateOverTime.constant, particlesPerAngle * rotAmount, 0.5f);
         }
 
+        if (em.rateOverTime.constant < 0.5f)
+            rocksAudio.Pause();
+
         if (rotAmount > 1)
         {
+            if (!rocksAudio.isPlaying)
+                rocksAudio.UnPause();
             finishCount -= rotAmount;
-            if (finishCount > 0)
+            if (finishCount < startingCount * 0.75f)
+            {
+                TutorialManager.instance.SieveRotated();
+            }
+            if (finishCount > startingCount * 0.1f)
             {
                 foreach (GameObject go in balls)
                 {
@@ -87,6 +97,8 @@ public class SandSpawner : MonoBehaviour
             }
             else
             {
+                TutorialManager.instance.SieveDone();
+                rocksAudio.Stop();
                 foreach (GameObject go in balls)
                 {
                     go.SetActive(false);
@@ -97,6 +109,7 @@ public class SandSpawner : MonoBehaviour
                 localDone = true;
             }
         }
+      
         prvsRot = transform.rotation;
     }
 }

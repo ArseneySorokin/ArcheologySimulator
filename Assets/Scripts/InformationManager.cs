@@ -6,6 +6,7 @@ using TMPro;
 
 public class InformationManager : MonoBehaviour
 {
+    public AudioSource successAudio;
     public Toggle toggle;
     public TextMeshProUGUI tmpTitle;
     public TextMeshProUGUI tmp;
@@ -19,6 +20,7 @@ public class InformationManager : MonoBehaviour
     {
         if (texts.Count > index)
         {
+            successAudio.Play();
             tmp.text = texts[index];
             tmpTitle.text = titles[index];
             index++;

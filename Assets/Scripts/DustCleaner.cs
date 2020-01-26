@@ -5,6 +5,7 @@ using UnityEngine;
 public class DustCleaner : MonoBehaviour
 {
     public InformationManager informationManager;
+    public AudioSource cleanAudio;
 
     public int brushSize = 5;
     public LayerMask raycastLayers;
@@ -30,7 +31,10 @@ public class DustCleaner : MonoBehaviour
     void Update()
     {
         if (!open)
+        {
+            cleanAudio.Pause();
             return;
+        }
 
         if (Input.GetMouseButton(0))
         {
@@ -38,9 +42,11 @@ public class DustCleaner : MonoBehaviour
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 10, raycastLayers))
             {
+                cleanAudio.UnPause();
                 //Debug.Log(hit.collider.gameObject.tag);
                 if (hit.collider.gameObject.tag == "Dust")
                 {
+                    TutorialManager.instance.DustBrushed();
                     if(!started)
                     {
                         Texture2D oldTex = (Texture2D)hit.collider.GetComponent<MeshRenderer>().material.mainTexture;
@@ -59,10 +65,22 @@ public class DustCleaner : MonoBehaviour
                     Vector2 tiling = renderer.material.mainTextureScale;
                     BrushTransparent(texture2D, Mathf.FloorToInt(pCoord.x * tiling.x), Mathf.FloorToInt(pCoord.y * tiling.y));
                 }
+                else
+                {
+                    cleanAudio.Pause();
+                }
+            }
+            else
+            {
+                cleanAudio.Pause();
             }
         }
+        else
+        {
+            cleanAudio.Pause();
+        }
     }
-
+    private bool completed;
     public void BrushTransparent(Texture2D texture, int x, int y)
     {
         float rSquared = brushSize * brushSize;
@@ -74,8 +92,11 @@ public class DustCleaner : MonoBehaviour
                     if(texture.GetPixel(u,v) != Color.clear)
                     {
                         cleanedPixels++;
-                        if(completionPercent < (float)cleanedPixels / (texture.width * texture.height))
+                        if (completionPercent < (float)cleanedPixels / (texture.width * texture.height) && !completed)
+                        {
                             informationManager.UpdateText();
+                            completed = true;
+                        }
                     }
                     texture.SetPixel(u, v, Color.clear);
                 }

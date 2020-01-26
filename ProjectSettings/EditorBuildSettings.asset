@@ -12,10 +12,13 @@ EditorBuildSettings:
     path: Assets/Orientation Sensors Input Controller/Demo's/Demo 1 (First Person
       View).unity
     guid: f8653d3ccf4a24d969acb9acf8ad583a
-  - enabled: 1
-    path: Assets/Scenes/Demo 1 (First Person View) 1.unity
+  - enabled: 0
+    path: Assets/Scenes/EgyptScene.unity
     guid: 3a615ea50d6ba5f4d85ddc9f48dbbb49
   - enabled: 0
     path: Assets/Orientation Sensors Input Controller/Demo's/Demo 5 (Sword).unity
     guid: 68aa07813837f4bb78be03c01baa2a3b
+  - enabled: 1
+    path: Assets/Scenes/GreeceScene.unity
+    guid: b2f57c408ded2354da6c627e8cc90cc1
   m_configObjects: {}

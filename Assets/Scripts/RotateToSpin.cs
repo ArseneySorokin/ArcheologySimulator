@@ -47,14 +47,7 @@ public class RotateToSpin : MonoBehaviour
         artifact.transform.rotation = (focusPoint.rotation);
         artifact.transform.position = (focusPoint.position);
         ghostFollow.enabled = false;
-        /*Vector3 boxSP = box.transform.position;
-        box.transform.SetParent(boxExitPoint);
-        for (float i = 0; i < 1; i += Time.deltaTime / boxExitTime)
-        {
-            box.transform.position = (Vector3.Lerp(boxSP, boxExitPoint.position, i));
-            yield return null;
-        }
-        box.transform.position =(boxExitPoint.position);*/
+        
         SandSpawner.done = true;
     }
 
@@ -65,6 +58,8 @@ public class RotateToSpin : MonoBehaviour
 
     Vector3 mousePoint;
     Vector3 startingEuler;
+
+    Quaternion startingRotation;
     private void Update()
     {
         if (!SandSpawner.done || !open)
@@ -72,6 +67,7 @@ public class RotateToSpin : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             mousePoint = Input.mousePosition;
+            startingRotation = artifact.transform.rotation;
         }
         if (Input.GetMouseButton(0))
         {
@@ -82,6 +78,8 @@ public class RotateToSpin : MonoBehaviour
 
             artifact.transform.Rotate(cameraRight, rotationOffset.y, Space.World);
             artifact.transform.Rotate(cameraUp, - rotationOffset.x, Space.World);
+            if (Quaternion.Angle(artifact.transform.rotation, startingRotation) > 5)
+                TutorialManager.instance.ObjectRotated();
             mousePoint = Input.mousePosition;
         }
     }

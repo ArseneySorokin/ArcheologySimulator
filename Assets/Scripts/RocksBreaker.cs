@@ -5,7 +5,9 @@ using UnityEngine;
 public class RocksBreaker : MonoBehaviour
 {
     public InformationManager informationManager;
-  
+    public List<AudioClip> clips;
+    public AudioSource breakingAudio;
+
     //public DustCleaner dustCleaner;
     public int rocksAmount;
     public LayerMask raycastLayers;
@@ -46,7 +48,9 @@ public class RocksBreaker : MonoBehaviour
             {
                 if(hit.collider.gameObject.tag == "Breakable")
                 {
-                    
+                    TutorialManager.instance.RockBroken();
+                    breakingAudio.clip = clips[Random.Range(0, clips.Count)];
+                    breakingAudio.Play();
                     if (rocksHit.Contains(hit.collider))
                     {
                         int index = rocksHit.FindIndex(a => a == hit.collider);
@@ -58,6 +62,7 @@ public class RocksBreaker : MonoBehaviour
                             hit.collider.gameObject.SetActive(false);
                             if (destroyed == rocksAmount)
                             {
+                                TutorialManager.instance.AllRocksBroken();
                                 //dustCleaner.enabled = true;
                                 informationManager.UpdateText();
                             }
